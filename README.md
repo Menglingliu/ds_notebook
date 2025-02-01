@@ -1,6 +1,6 @@
 # Python notebook for data science
 
-**Motivation**: I’m summarizing and templating python notebooks for common data science methodologies i.e. regression, propensity score matching etc; I am also documenting my learning notes from medium blogs or online courses
+**Motivation**: I’m summarizing and templating python notebooks for common data science methodologies i.e. machine learning, causal inference etc; I am also documenting my learning notes from medium blogs or online courses
 
 ## Content:
 1. Data wrangling in Python
