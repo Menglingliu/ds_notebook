@@ -1,0 +1,14 @@
+Go to the repo first
+git branch
+git checkout -b branch_name
+git add filename
+git status -uno
+git status
+git branch -D branch_name
+git log
+git commit
+
+git checkout main
+git add file_name
+git commit -m "93commit message"
+git push origin branch_name i.e. git push origin main
