@@ -1,0 +1,105 @@
+We have two tables: Calendar_date and Orders
+
+Calendar_date
+Cal_date
+
+Orders
+Order_id | order_date | buyer_id | product_id | qty
+
+Questions: 
+For each buyer on each cal_date day, look at sum of previous 90 day qty
+Categorize them into tiers:
+-	> 100: tier 1
+-	50 -100: tier 2
+-	< 50: tier 3
+
+
+Assumption 1: only for users who bought an order
+
+WITH cal_order AS (
+SELECT
+   Cal_date.
+   Buyer_id,
+   COALESCE(SUM(qty), 0) AS total_qty
+FROM calendar_date ca
+LEFT JOIN orders or
+ON ca.cal_date = or.order_date
+GROUP BY 1,2
+),
+
+Data_raw AS (
+SELECT
+   Cal_date,
+   Buyer_id,
+   SUM(total_qty) OVER (PARTITION BY buyer_id ORDER BY cal_date ROWS BETWEEN 89 PRECEDING AND CURRENT ROW) AS trailing_90_day_sales
+FROM cal_order
+)
+
+SELECT
+   Cal_date,
+   Buyer_id,
+   CASE WHEN trailing_90_day_sales > 100 THEN ‘tier 1’ 
+             WHEN trialing_90_day_sales BETWEEN 50 and 100 THEN ‘tier 2’
+             ELSE ‘tier 3’ END AS tier_type
+FROM Data_raw
+
+
+Assumption 2: for users who didn’t buy any order, also want to show that user in the tiering 
+For each buyer, only show cal dates from first order purchase till last order purchase dates
+
+WITH calender_buyer AS (
+SELECT
+   Cal_date,
+   Buyer_id
+FROM calendar_date
+CROSS JOIN 
+(SELECT DISTINCT buyer_id FROM orders)
+),
+
+User_first_last_order AS (
+SELECT
+   Buyer_id,
+   MIN(order_date) AS first_order_date,
+   MAX(order_date) AS last_order_date
+FROM orders
+GROUP BY 1
+),
+
+Calendar_buyer_adj AS (
+SELECT
+   Cal_date,
+   Buyer_id
+FROM calender_buyer cb
+JOIN User_first_last_order uf
+ON cb.buyer_id = uf.buyer_id
+AND cal_date BETWEEN uf.first_order_date AND uf.last_order_date
+),
+
+Cal_order AS (
+SELECT
+   Cal_date,
+   Buyer_id,
+   IFNULL(SUM(qty), 0) AS total_qty
+FROM Calendar_buyer_adj ca
+LEFT JOIN orders or
+ON ca.cal_date = or.order_date
+AND ca.buyer_id = or.buyer_id
+GROUP BY 1,2
+),
+
+Data_raw AS (
+SELECT
+   Cal_date,
+   Buyer_id,
+   SUM(total_qty) OVER (PARTITION BY buyer_id ORDER BY cal_date ROWS BETWEEN 89 PRECEDING AND CURRENT ROW) AS trailing_90_day_sales
+FROM cal_order
+)
+
+SELECT
+   Cal_date,
+   Buyer_id,
+   CASE WHEN trailing_90_day_sales > 100 THEN ‘tier 1’ 
+        WHEN trailing_90_day_sales BETWEEN 50 and 100 THEN ‘tier 2’
+        ELSE ‘tier 3’ END AS tier_type
+FROM Data_raw
+
