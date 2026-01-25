@@ -1,15 +1,23 @@
-cd /path/to/repo (Moves your terminal “into” the local folder that contains the git repository)
+cd /path/to/repo 
+    (Moves your terminal “into” the local folder that contains the git repository)
 
-git checkout main (Switches your working directory to the main branch）
+git checkout main 
+    (Switches your working directory to the main branch）
 
-git pull (Updates your current branch (main) with the latest changes from the remote (usually origin))
+git pull 
+    (Updates your current branch (main) with the latest changes from the remote (usually origin))
 
-git checkout -b branch_name (Creates a new branch and switches to it in one command.)
+git checkout -b branch_name 
+    (Creates a new branch and switches to it in one command.)
 
-git status (Shows what git thinks is going on right now: 1. which branch you’re on; 2. which files are modified / staged / untracked; 3. what would be included in the next commit)
+git status 
+    (Shows what git thinks is going on right now: 1. which branch you’re on; 2. which files are modified / staged / untracked; 3. what would be included in the next commit)
 
-git add file_name (“Stages” the file — meaning you tell git: include the current version of this file in the next commit)
+git add file_name 
+    (“Stages” the file — meaning you tell git: include the current version of this file in the next commit)
 
-git commit -m "commit message" (Creates a commit from what’s staged.)
+git commit -m "commit message" 
+    (Creates a commit from what’s staged.)
 
-git push -u origin branch_name (Uploads your branch + commits to GitHub.)
+git push -u origin branch_name 
+    (Uploads your branch + commits to GitHub.)
